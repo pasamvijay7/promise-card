@@ -1,13 +1,17 @@
 exports.handler = async (event) => {
-  try {
-    const code = event.queryStringParameters?.code;
-
-    if (!code) {
-      return {
-        statusCode: 400,
-        body: "No authorization code received"
-      };
-    }
+  return {
+    statusCode: 200,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      query: event.queryStringParameters,
+      env_redirect: process.env.UPSTOX_REDIRECT_URI,
+      env_client: process.env.UPSTOX_CLIENT_ID ? "SET" : "MISSING",
+      env_secret: process.env.UPSTOX_CLIENT_SECRET ? "SET" : "MISSING"
+    })
+  };
+};
 
     const tokenResponse = await fetch(
       "https://api.upstox.com/v2/login/authorization/token",
